@@ -1,3 +1,5 @@
+@import "monday-ui-style/dist/index.min.css";
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -65,4 +67,60 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+
+  body {
+    margin: 0;
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .monday-board {
+    background: var(--primary-background-color);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--box-shadow-small);
+  }
+
+  .monday-board {
+    background: var(--primary-background-color);
+    border-radius: var(--border-radius-medium);
+    padding: var(--spacing-large);
+  }
+  
+  .monday-alert {
+    margin-bottom: var(--spacing-medium);
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  :root {
+    --primary-background-color: #f6f7fb;
+    --secondary-background-color: #ffffff;
+    --primary-text-color: #323338;
+    --secondary-text-color: #676879;
+  }
+
+  .app-wrapper {
+    min-height: 100vh;
+  }
+  
+  .loading-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
 }
