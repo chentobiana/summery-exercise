@@ -1,0 +1,18 @@
+/* src/App.module.css */
+.appContainer {
+    min-height: 100vh;
+    background-color: #f6f7fb;
+    padding: 24px;
+  }
+  
+  .contentWrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .mainTitle {
+    font-size: 32px;
+    font-weight: 700;
+    color: #323338;
+    margin: 0 0 32px 0;
+  }
