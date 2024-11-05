@@ -35,6 +35,17 @@ const ItemTable = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    
+    // Parse the date string (assuming format YYYY-MM-DD)
+    const [year, month, day] = dateString.split('-');
+    if (!year || !month || !day) return dateString;
+
+    // Return in DD-MM-YYYY format
+    return `${day}-${month}-${year}`;
+  };
+
   if (isLoading) {
     return (
       <Flex align={Flex.align.CENTER} justify={Flex.justify.CENTER} style={{ height: '200px' }}>
@@ -83,7 +94,7 @@ const ItemTable = () => {
               <TableRow key={item.id}>
                 <TableCell>{item.name || '-'}</TableCell>
                 <TableCell>{item.text || '-'}</TableCell>
-                <TableCell>{item.date || '-'}</TableCell>
+                <TableCell>{formatDate(item.date)}</TableCell>
                 <TableCell>
                   {item.status ? (
                     <Chips 
