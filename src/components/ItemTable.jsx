@@ -1,81 +1,116 @@
-// src/components/ItemTable.jsx
 import React from 'react';
-import { useItems } from '../hooks/useItems';
-import { 
-  Box,
+import {
+  Table,
+  TableHeader,
+  TableHeaderCell,
+  TableBody,
+  TableRow,
+  TableCell,
+  Flex,
+  Chips,
   Loader
 } from "monday-ui-react-core";
-import styles from './ItemTable.module.css';
+import { useItems } from '../hooks/useItems';
 
-const StatusIndicator = ({ status }) => {
-  const getStatusStyles = (status) => {
+const ItemTable = () => {
+  const { data, isLoading, isError } = useItems();
+
+  const columns = [
+    { id: "name", title: "Name", loadingStateType: "medium-text" },
+    { id: "description", title: "Description", loadingStateType: "long-text" },
+    { id: "dueDate", title: "Due Date", loadingStateType: "medium-text" },
+    { id: "status", title: "Status", loadingStateType: "medium-text" }
+  ];
+
+  const getChipColor = (status) => {
     switch (status?.toLowerCase()) {
       case 'working on it':
-        return styles.statusWorking;
+        return Chips.colors.WARNING;
+      case 'stuck':
+        return Chips.colors.NEGATIVE;
       case 'done':
-        return styles.statusDone;
-      case 'not started':
-        return styles.statusNotStarted;
+        return Chips.colors.POSITIVE;
       default:
-        return styles.statusDefault;
+        return Chips.colors.PRIMARY;
     }
   };
 
-  return (
-    <div className={`${styles.status} ${getStatusStyles(status)}`}>
-      {status}
-    </div>
-  );
-};
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    
+    // Parse the date string (assuming format YYYY-MM-DD)
+    const [year, month, day] = dateString.split('-');
+    if (!year || !month || !day) return dateString;
 
-const ItemTable = () => {
-  const { data, isLoading, error } = useItems();
+    // Return in DD-MM-YYYY format
+    return `${day}-${month}-${year}`;
+  };
 
   if (isLoading) {
     return (
-      <div className={styles.loadingContainer}>
-        <Loader size={Loader.sizes.LARGE} />
-      </div>
+      <Flex align={Flex.align.CENTER} justify={Flex.justify.CENTER} style={{ height: '200px' }}>
+        <Loader size={Loader.sizes.MEDIUM} />
+      </Flex>
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
-      <div className={styles.errorMessage}>
-        Error loading items: {error.message}
-      </div>
+      <Flex align={Flex.align.CENTER} justify={Flex.justify.CENTER} style={{ height: '200px' }}>
+        <div>Error loading board items</div>
+      </Flex>
     );
   }
-
-  const items = data?.orderedItems || [];
 
   return (
-    <Box className={styles.boardContainer}>
-      <div className={styles.tableWrapper}>
-        <table className={styles.mondayTable}>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Due Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr key={item.id}>
-                <td className={styles.nameCell}>{item.name}</td>
-                <td>{item.text}</td>
-                <td className={styles.dateCell}>{item.date}</td>
-                <td>
-                  <StatusIndicator status={item.status} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Box>
+    <Flex
+      align={Flex.align.START}
+      justify={Flex.justify.SPACE_BETWEEN}
+      gap={Flex.gaps.MEDIUM}
+      style={{ flex: 1 }}
+    >
+      <Table
+        style={{ width: "auto" }}
+        size={Table.sizes.MEDIUM}
+        columns={columns}
+      >
+        <TableHeader>
+          {columns.map((headerCell, index) => (
+            <TableHeaderCell
+              key={index}
+              title={headerCell.title}
+              icon={headerCell.icon}
+              infoContent={headerCell.infoContent}
+            />
+          ))}
+        </TableHeader>
+        <TableBody>
+          {!data?.orderedItems?.length ? (
+            <TableRow>
+              <TableCell colSpan={4}>No items to display</TableCell>
+            </TableRow>
+          ) : (
+            data.orderedItems.map(item => (
+              <TableRow key={item.id}>
+                <TableCell>{item.name || '-'}</TableCell>
+                <TableCell>{item.text || '-'}</TableCell>
+                <TableCell>{formatDate(item.date)}</TableCell>
+                <TableCell>
+                  {item.status ? (
+                    <Chips 
+                      label={item.status}
+                      color={getChipColor(item.status)}
+                    />
+                  ) : (
+                    '-'
+                  )}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </Flex>
   );
 };
 
