@@ -63,3 +63,37 @@ export const fetchItems = async () => {
     throw error;
   }
 };
+
+export const deleteItem = async (itemId) => {
+    const API_KEY = import.meta.env.VITE_API_KEY;
+    
+    const mutation = `
+      mutation {
+        delete_item(item_id: ${itemId}) {
+          id
+        }
+      }
+    `;
+  
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${API_KEY}`,
+          'API-Version': '2023-04',
+        },
+        body: JSON.stringify({ query: mutation }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to delete item');
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      throw error;
+    }
+  };
