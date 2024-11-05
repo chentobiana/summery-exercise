@@ -8,18 +8,39 @@ import {
   TableCell,
   Flex,
   Chips,
-  Loader
+  Loader,
+  IconButton,
 } from "monday-ui-react-core";
+import { Delete } from "monday-ui-react-core/icons";
 import { useItems } from '../hooks/useItems';
+import { useMutation, useQueryClient } from 'react-query';
+import { deleteItem } from '../api/mondayApi';
 
 const ItemTable = () => {
+  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useItems();
+
+  const deleteMutation = useMutation(deleteItem, {
+    onSuccess: () => {
+      // Invalidate and refetch the items query
+      queryClient.invalidateQueries('items');
+    },
+  });
+
+  const handleDelete = async (itemId) => {
+    try {
+      await deleteMutation.mutateAsync(itemId);
+    } catch (error) {
+      console.error('Failed to delete item:', error);
+    }
+  };
 
   const columns = [
     { id: "name", title: "Name", loadingStateType: "medium-text" },
     { id: "description", title: "Description", loadingStateType: "long-text" },
     { id: "dueDate", title: "Due Date", loadingStateType: "medium-text" },
-    { id: "status", title: "Status", loadingStateType: "medium-text" }
+    { id: "status", title: "Status", loadingStateType: "medium-text" },
+    { id: "actions", title: "", loadingStateType: "medium-text" }
   ];
 
   const getChipColor = (status) => {
@@ -37,12 +58,8 @@ const ItemTable = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return '-';
-    
-    // Parse the date string (assuming format YYYY-MM-DD)
     const [year, month, day] = dateString.split('-');
     if (!year || !month || !day) return dateString;
-
-    // Return in DD-MM-YYYY format
     return `${day}-${month}-${year}`;
   };
 
@@ -87,7 +104,7 @@ const ItemTable = () => {
         <TableBody>
           {!data?.orderedItems?.length ? (
             <TableRow>
-              <TableCell colSpan={4}>No items to display</TableCell>
+              <TableCell colSpan={5}>No items to display</TableCell>
             </TableRow>
           ) : (
             data.orderedItems.map(item => (
@@ -100,10 +117,21 @@ const ItemTable = () => {
                     <Chips 
                       label={item.status}
                       color={getChipColor(item.status)}
+                      readOnly
                     />
                   ) : (
                     '-'
                   )}
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    icon={Delete}
+                    kind={IconButton.kinds.TERTIARY}
+                    size={IconButton.sizes.SMALL}
+                    ariaLabel="Delete item"
+                    onClick={() => handleDelete(item.id)}
+                    disabled={deleteMutation.isLoading}
+                  />
                 </TableCell>
               </TableRow>
             ))
