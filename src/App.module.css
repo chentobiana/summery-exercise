@@ -1,18 +1,23 @@
-/* src/App.module.css */
 .appContainer {
-    min-height: 100vh;
-    background-color: #f6f7fb;
-    padding: 24px;
-  }
-  
-  .contentWrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .mainTitle {
-    font-size: 32px;
-    font-weight: 700;
-    color: #323338;
-    margin: 0 0 32px 0;
-  }
+  min-height: 100vh;
+  background-color: #f6f7fb;
+  padding: 20px;
+}
+
+.contentWrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+}
+
+.mainTitle {
+  font-size: 24px;
+  font-weight: 500;
+  color: #323338;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e1e1e1;
+}
