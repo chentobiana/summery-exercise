@@ -39,7 +39,6 @@ export const fetchItems = async () => {
     }
 
     const data = await response.json();
-    const boardName = data.data.boards[0].name;
     const items = data.data.boards[0].items_page.items;
     
     const orderedItems = items.map(item => {
@@ -56,7 +55,7 @@ export const fetchItems = async () => {
       };
     });
     
-    return { boardName, orderedItems };
+    return { orderedItems };
 
   } catch (error) {
     console.error('Error fetching board items:', error);
